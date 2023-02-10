@@ -1,15 +1,15 @@
 resource "aws_iam_user" "default" {
-  count = module.this.enabled ? 1 : 0
+  count = module.context.enabled ? 1 : 0
 
   name                 = var.user_name
   path                 = var.path
   permissions_boundary = var.permissions_boundary
   force_destroy        = var.force_destroy
-  tags                 = module.this.tags
+  tags                 = module.context.tags
 }
 
 resource "aws_iam_user_login_profile" "default" {
-  count = module.this.enabled && var.login_profile_enabled == true ? 1 : 0
+  count = module.context.enabled && var.login_profile_enabled == true ? 1 : 0
 
   user                    = aws_iam_user.default[count.index].name
   pgp_key                 = var.pgp_key
@@ -23,7 +23,7 @@ resource "aws_iam_user_login_profile" "default" {
 }
 
 resource "aws_iam_user_group_membership" "default" {
-  count      = module.this.enabled && length(var.groups) > 0 ? 1 : 0
+  count      = module.context.enabled && length(var.groups) > 0 ? 1 : 0
   user       = aws_iam_user.default[count.index].name
   groups     = var.groups
   depends_on = [aws_iam_user.default]
