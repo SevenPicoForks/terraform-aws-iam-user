@@ -1,4 +1,6 @@
 resource "aws_iam_user" "default" {
+  #checkov:skip=CKV_AWS_273:skipping 'Ensure access is controlled through SSO and not AWS IAM defined users'
+  #checkov:skip=CKV2_AWS_22:skipping 'Ensure an IAM User does not have access to the console'
   count = module.context.enabled ? 1 : 0
 
   name                 = var.user_name
